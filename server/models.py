@@ -18,10 +18,13 @@ class Hero(db.Model, SerializerMixin):
     name = db.Column(db.String)
     super_name = db.Column(db.String)
 
-    # add relationship
+    # # add relationship
+    hero_powers = db.relationship('HeroPower', back_populates='hero', cascade='all, delete-orphan')
+     # Relationship to Power through HeroPower
+    powers =db.relationship('Power', secondary='hero_powers', back_populates='heroes')
 
-    # add serialization rules
-
+    # # add serialization rules
+    serialize_rules=('-powers.hero',)
     def __repr__(self):
         return f'<Hero {self.id}>'
 
@@ -33,10 +36,11 @@ class Power(db.Model, SerializerMixin):
     name = db.Column(db.String)
     description = db.Column(db.String)
 
-    # add relationship
+    # # add relationship
+    hero_powers = db.relationship('HeroPower', back_populates='power', cascade='all, delete-orphan')
 
-    # add serialization rules
-
+    # # add serialization rules
+    serialize_rules=('-heroes.power',)
     # add validation
 
     def __repr__(self):
@@ -48,8 +52,9 @@ class HeroPower(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String, nullable=False)
-
-    # add relationships
+    hero_id=db.column(db.integer, db.ForeignKey ('heroes.id',ondelete='CASCADE'),nullable=False)
+    power_id=db.column(db.integer, db.ForeignKey ('powers.id',ondelete='CASCADE'),nullable=False)
+    
 
     # add serialization rules
 
