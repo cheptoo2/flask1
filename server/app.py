@@ -23,6 +23,11 @@ db.init_app(app)
 def index():
     return '<h1>Code challenge</h1>'
 
-
+class HeroList(Resource):
+    def get(self):
+        heroes=Hero.query.all()
+        return jsonify([hero.to_dict() for hero in heroes])
+    
+api.add_resource(HeroList,'/heroes')    
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
